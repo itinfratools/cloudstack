@@ -1,0 +1,5 @@
+class cloudstack::storage::nfs {
+
+
+    
+}

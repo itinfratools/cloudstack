@@ -1,0 +1,51 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = 'CentOS-6.4-x86_64-minimal'
+  config.vm.box_url = 'https://mega.co.nz/#!2RUi0K7Q!DADgrEw3LGKNrDycbR1cKScHtVBi-aIgkjqnXjXmUUc' # CentOS-6.4-x86_64-minimal.box
+  # config.vm.boot_mode = :gui
+  
+  # CloudStack Management Server
+  config.vm.define :management do |management|    
+    management.vm.hostname = 'management'
+    # Guest Network
+    management.vm.network :private_network, ip: '10.0.1.10'
+    # Management Network
+    management.vm.network :private_network, ip: '10.10.1.10'
+    # Storage Network
+    management.vm.network :private_network, ip: '172.16.1.10'
+    # Public Network
+    management.vm.network :private_network, ip: '192.168.1.10'
+    # management.vm.customize [
+    #   "modifyvm", :id,
+    #   "--name", "csms",
+    #   "--memory", "2048"
+    # ]
+    management.vm.provision :puppet do |puppet|
+      puppet.module_path = ['../modules']
+      puppet.manifest_file = 'site.pp'
+      puppet.options = ["--templatedir templates"]
+    end
+  end
+
+  # CloudStack Node Server
+  config.vm.define :node01 do |node01|
+
+    node01.vm.box = 'XenServer-6.2'
+    node01.vm.box_url = 'https://mega.co.nz/#!7YEWgRZL!M1KLN1b6nAydZcrI1WQW4iZL3hE3phJaiGNqxpFNfP4' # XenServer-6.2.box
+    node01.vm.hostname = 'node01'
+    
+    node01.vm.synced_folder ".", "/vagrant", :disabled => true
+    # Guest Network
+    node01.vm.network :private_network, ip: '10.0.1.20'
+    # Management Network
+    node01.vm.network :private_network, ip: '10.10.1.20'
+    # Storage Network
+    node01.vm.network :private_network, ip: '172.16.1.20'
+    # Public Network
+    node01.vm.network :private_network, ip: '192.168.1.20'
+    # node01.vm.customize [
+    #   "modifyvm", :id,
+    #   "--name", "node01",
+    #   "--memory", "2048"
+    # ]
+  end
+end
