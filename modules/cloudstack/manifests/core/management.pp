@@ -6,14 +6,14 @@ class cloudstack::core::management inherits cloudstack {
 
 # Set management facter $server_type
 
-  package { $cloudstack::management_packages :
-    ensure  => present,
-  }
-
-  service { $cloudstack::management_services :
-    ensure    => running,
-    enable    => true,
-  }
+  # package { $cloudstack::management_packages :
+  #   ensure  => present,
+  # }
+  # 
+  # service { $cloudstack::management_services :
+  #   ensure    => running,
+  #   enable    => true,
+  # }
 
     
 }
