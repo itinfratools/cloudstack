@@ -48,4 +48,23 @@ Vagrant.configure("2") do |config|
     #   "--memory", "2048"
     # ]
   end
+  
+  # CloudStack Management Server Manual Install
+  config.vm.define :management01 do |management|    
+    management.vm.hostname = 'management01'
+    # Guest Network
+    management.vm.network :private_network, ip: '10.0.1.30'
+    # Management Network
+    management.vm.network :private_network, ip: '10.10.1.30'
+    # Storage Network
+    management.vm.network :private_network, ip: '172.16.1.30'
+    # Public Network
+    management.vm.network :private_network, ip: '192.168.1.30'
+    # management.vm.customize [
+    #   "modifyvm", :id,
+    #   "--name", "csms",
+    #   "--memory", "2048"
+    # ]
+  end
+
 end
