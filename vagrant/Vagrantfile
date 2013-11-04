@@ -1,15 +1,13 @@
 Vagrant.configure("2") do |config|
-
-  # config.vm.boot_mode = :gui
   
   # CloudStack Management Server
   config.vm.define :management01 do |management|    
-
+  
     management.vm.box = 'CloudStack-4.2-CentOS-6.4-x86_64'
     management.vm.box_url = '' # CloudStack-4.2-CentOS-6.4-x86_64
-    management.vm.hostname = 'management01'    
+    management.vm.hostname = 'management01.lab.cloudstack.com'    
     management.vm.synced_folder ".", "/vagrant", :disabled => true
-
+  
     # Guest Network
     management.vm.network :private_network, ip: '10.1.100.10'
     # Management Network
@@ -18,7 +16,7 @@ Vagrant.configure("2") do |config|
     management.vm.network :private_network, ip: '172.16.100.10'
     # Public Network
     management.vm.network :private_network, ip: '192.168.100.10'
-
+  
     management.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "4096"]
       vb.customize ["modifyvm", :id, "--cpus", "2"]   
@@ -30,7 +28,7 @@ Vagrant.configure("2") do |config|
 
     node.vm.box = 'XenServer-6.2'
     node.vm.box_url = 'https://mega.co.nz/#!7YEWgRZL!M1KLN1b6nAydZcrI1WQW4iZL3hE3phJaiGNqxpFNfP4' # XenServer-6.2.box
-    node.vm.hostname = 'node01'    
+    node.vm.hostname = 'node01.lab.clodstack.com'    
     node.vm.synced_folder ".", "/vagrant", :disabled => true
 
     # Guest Network
@@ -48,52 +46,61 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # FreeNas-9.1.1
-  config.vm.define :freenas do |freenas|    
-
-    freenas.vm.box = 'FreeNas-9.1.1'
-    freenas.vm.box_url = '' # FreeNas-9.1.1.box
-
-    # Storage Network
-    freenas.vm.network :private_network, ip: '172.16.100.2'
-
-    freenas.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2048"]
-      vb.customize ["modifyvm", :id, "--cpus", "2"]   
-    end    
-  end
-
   # openfileresa-2.99.1-x86_64
   config.vm.define :openfiler do |openfiler|    
-
-    openfiler.vm.box = 'openfileresa-2.99.1-x86_64'
-    openfiler.vm.box_url = '' # openfileresa-2.99.1-x86_64.box
-    openfiler.vm.hostname = 'openfiler'
-
+  
+    openfiler.vm.box = 'openfiler_cloudstack'
+    openfiler.vm.box_url = 'openfiler_cloudstack.box' # openfileresa-2.99.1-x86_64.box
+    openfiler.vm.hostname = 'openfiler.lab.cloudstack.com'
+    openfiler.vm.synced_folder ".", "/vagrant", :disabled => true
+  
     # Storage Network
-    openfiler.vm.network :private_network, ip: '172.16.100.3'
-
+    openfiler.vm.network :private_network, ip: '172.16.100.2'
+  
     openfiler.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2048"]
+      # vb.gui = true  
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
       vb.customize ["modifyvm", :id, "--cpus", "2"]   
     end    
   end
 
-  # CentOS-6.4-x86_64-minimal
+  # CentOS-6.4-x86_64-minimal MySQL
+  config.vm.define :mysql do |centos|
+
+    centos.vm.box = 'mysql_cloudstack'
+    centos.vm.box_url = 'mysql_cloudstack.box' # mysql_cloudstack.box
+    centos.vm.hostname = 'mysql.lab.cloudstack.com'
+    # centos.vm.synced_folder ".", "/vagrant", :disabled => true
+
+    # Management Network
+    centos.vm.network :private_network, ip: '10.10.100.2'
+
+    centos.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "512"]
+      vb.customize ["modifyvm", :id, "--cpus", "2"]   
+    end    
+  end
+
+  # CentOS-6.4-x86_64-minimal - Play Ground
   config.vm.define :centos do |centos|
 
     centos.vm.box = 'CentOS-6.4-x86_64-minimal'
     centos.vm.box_url = 'https://mega.co.nz/#!2RUi0K7Q!DADgrEw3LGKNrDycbR1cKScHtVBi-aIgkjqnXjXmUUc' # CentOS-6.4-x86_64-minimal.box
-    centos.vm.hostname = 'centos'
+    centos.vm.hostname = 'centos.lab.cloudstack.com'
 
     # Guest Network
-    centos.vm.network :private_network, ip: '10.1.100.2'
+    centos.vm.network :private_network, ip: '10.1.100.9'
+    # Management Network
+    centos.vm.network :private_network, ip: '10.10.100.9'
+    # Storage Network
+    centos.vm.network :private_network, ip: '172.16.100.9'
+    # Public Network
+    centos.vm.network :private_network, ip: '192.168.100.9'
 
     centos.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2048"]
+      vb.customize ["modifyvm", :id, "--memory", "4096"]
       vb.customize ["modifyvm", :id, "--cpus", "2"]   
     end    
   end
-
   
 end

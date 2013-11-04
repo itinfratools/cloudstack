@@ -1,0 +1,18 @@
+cloudstack-setup-databases cloud:ChangeMe@10.10.100.2 --deploy-as=root:ChangeMe
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'
+    IDENTIFIED BY PASSWORD '*A6F774AC93E37982A7F85DADC0826830C98B6440'
+    WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+GRANT ALL PRIVILEGES ON database.* to ‘user’@'yourremotehost'
+
+
+
+/usr/bin/mysqladmin -u root password 'ChangeMe'
+
+dd if=/dev/zero of=lixo
+sync
+rm -rf lixo
+
+vagrant package --base OpenFiler
