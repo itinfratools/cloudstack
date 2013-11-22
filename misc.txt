@@ -16,3 +16,4 @@ sync
 rm -rf lixo
 
 vagrant package --base OpenFiler
+
